@@ -14,5 +14,8 @@
     "eslint": "^8.11.0",
     "eslint-config-google": "^0.14.0",
     "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^20.2.1"
   }
 }
