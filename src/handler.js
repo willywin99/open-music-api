@@ -93,8 +93,32 @@ const editAlbumByIdHandler = (request, h) => {
   return response;
 };
 
+const deleteAlbumByIdHandler = (request, h) => {
+  const {id} = request.params;
+
+  const index = albums.findIndex((album) => album.id === id);
+
+  if (index !== -1) {
+    albums.splice(index, 1);
+    const response = h.response({
+      status: 'success',
+      message: 'Album berhasil dihapus',
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Album gagal dihapus. Id tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
 module.exports = {
   addAlbumHandler,
   getAlbumByIdHandler,
   editAlbumByIdHandler,
+  deleteAlbumByIdHandler,
 };
