@@ -60,4 +60,41 @@ const getAlbumByIdHandler = (request, h) => {
   return response;
 };
 
-module.exports = {addAlbumHandler, getAlbumByIdHandler};
+const editAlbumByIdHandler = (request, h) => {
+  const {id} = request.params;
+
+  const {name, year, body} = request.payload;
+  const updatedAt = new Date().toISOString();
+
+  const index = albums.findIndex((album) => album.id === id);
+
+  if (index !== -1) {
+    albums[index] = {
+      ...albums[index],
+      name,
+      year,
+      body,
+      updatedAt,
+    };
+
+    const response = h.response({
+      status: 'success',
+      message: 'Album berhasil diperbarui',
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Gagal memperbarui album. Id tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+module.exports = {
+  addAlbumHandler,
+  getAlbumByIdHandler,
+  editAlbumByIdHandler,
+};
