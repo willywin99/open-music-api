@@ -38,4 +38,26 @@ const addAlbumHandler = (request, h) => {
   return response;
 };
 
-module.exports = {addAlbumHandler};
+const getAlbumByIdHandler = (request, h) => {
+  const {id} = request.params;
+
+  const album = albums.filter((a) => a.id === id)[0];
+
+  if (album !== undefined) {
+    return {
+      status: 'success',
+      data: {
+        album,
+      },
+    };
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Album tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+module.exports = {addAlbumHandler, getAlbumByIdHandler};

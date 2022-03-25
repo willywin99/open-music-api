@@ -1,4 +1,4 @@
-const {addAlbumHandler} = require('./handler');
+const {addAlbumHandler, getAlbumByIdHandler} = require('./handler');
 
 const routes = [
   {
@@ -9,7 +9,7 @@ const routes = [
   {
     method: 'GET',
     path: '/albums/{id}',
-    handler: () => {},
+    handler: getAlbumByIdHandler,
   },
   {
     method: 'PUT',
