@@ -187,6 +187,42 @@ const getSongByIdHandler = (request, h) => {
   return response;
 };
 
+const editSongByIdHandler = (request, h) => {
+  const {id} = request.params;
+
+  const {title, year, genre, performer, duration, albumId} = request.payload;
+  const updatedAt = new Date().toISOString();
+
+  const index = songs.findIndex((song) => song.id === id);
+
+  if (index !== -1) {
+    songs[index] = {
+      ...songs[index],
+      title,
+      year,
+      genre,
+      performer,
+      duration,
+      albumId,
+      updatedAt,
+    };
+
+    const response = h.response({
+      status: 'success',
+      message: 'Lagu berhasil diperbarui',
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Gagal memperbarui lagu. Id tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
 module.exports = {
   addAlbumHandler,
   getAlbumByIdHandler,
@@ -195,4 +231,5 @@ module.exports = {
   addSongHandler,
   getAllSongsHandler,
   getSongByIdHandler,
+  editSongByIdHandler,
 };
