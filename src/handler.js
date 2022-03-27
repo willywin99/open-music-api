@@ -152,10 +152,18 @@ const addSongHandler = (request, h) => {
   return response;
 };
 
+const getAllSongsHandler = () => ({
+  status: 'success',
+  data: {
+    songs,
+  },
+});
+
 module.exports = {
   addAlbumHandler,
   getAlbumByIdHandler,
   editAlbumByIdHandler,
   deleteAlbumByIdHandler,
   addSongHandler,
+  getAllSongsHandler,
 };

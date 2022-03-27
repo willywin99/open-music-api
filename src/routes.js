@@ -4,6 +4,7 @@ const {
   editAlbumByIdHandler,
   deleteAlbumByIdHandler,
   addSongHandler,
+  getAllSongsHandler,
 } = require('./handler');
 
 const routes = [
@@ -31,6 +32,11 @@ const routes = [
     method: 'POST',
     path: '/songs',
     handler: addSongHandler,
+  },
+  {
+    method: 'GET',
+    path: '/songs',
+    handler: getAllSongsHandler,
   },
 ];
 
