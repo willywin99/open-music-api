@@ -3,6 +3,7 @@ const {
   getAlbumByIdHandler,
   editAlbumByIdHandler,
   deleteAlbumByIdHandler,
+  addSongHandler,
 } = require('./handler');
 
 const routes = [
@@ -25,6 +26,11 @@ const routes = [
     method: 'DELETE',
     path: '/albums/{id}',
     handler: deleteAlbumByIdHandler,
+  },
+  {
+    method: 'POST',
+    path: '/songs',
+    handler: addSongHandler,
   },
 ];
 

@@ -1,5 +1,6 @@
 const {nanoid} = require('nanoid');
 const albums = require('./albums');
+const songs = require('./songs');
 
 const addAlbumHandler = (request, h) => {
   const {name, year, body} = request.payload;
@@ -116,9 +117,45 @@ const deleteAlbumByIdHandler = (request, h) => {
   return response;
 };
 
+const addSongHandler = (request, h) => {
+  const {title, year, genre, performer, duration, albumId} = request.payload;
+
+  const id = nanoid(16);
+  const createdAt = new Date().toISOString();
+  const updatedAt = createdAt;
+
+  const newSong = {
+    title, year, genre, performer, duration, albumId, id, createdAt, updatedAt,
+  };
+
+  songs.push(newSong);
+
+  const isSuccess = songs.filter((song) => song.id === id).length > 0;
+
+  if (isSuccess) {
+    const response = h.response({
+      status: 'success',
+      message: 'Lagu berhasil ditambahkan',
+      data: {
+        songId: id,
+      },
+    });
+    response.code(201);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Lagu berhasil ditambahkan',
+  });
+  response.code(500);
+  return response;
+};
+
 module.exports = {
   addAlbumHandler,
   getAlbumByIdHandler,
   editAlbumByIdHandler,
   deleteAlbumByIdHandler,
+  addSongHandler,
 };
