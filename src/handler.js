@@ -120,7 +120,7 @@ const deleteAlbumByIdHandler = (request, h) => {
 const addSongHandler = (request, h) => {
   const {title, year, genre, performer, duration, albumId} = request.payload;
 
-  const id = nanoid(16);
+  const id = 'song-' + nanoid(16);
   const createdAt = new Date().toISOString();
   const updatedAt = createdAt;
 
@@ -152,12 +152,40 @@ const addSongHandler = (request, h) => {
   return response;
 };
 
-const getAllSongsHandler = () => ({
-  status: 'success',
-  data: {
-    songs,
-  },
-});
+const getAllSongsHandler = (request, h) => {
+  return h.response({
+    status: 'success',
+    data: {
+      songs: songs.map((song) => ({
+        id: song.id,
+        title: song.title,
+        performer: song.performer,
+      })),
+    },
+  });
+};
+
+const getSongByIdHandler = (request, h) => {
+  const {id} = request.params;
+
+  const song = songs.filter((s) => s.id === id)[0];
+
+  if (song !== undefined) {
+    return {
+      status: 'success',
+      data: {
+        song,
+      },
+    };
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Lagu tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
 
 module.exports = {
   addAlbumHandler,
@@ -166,4 +194,5 @@ module.exports = {
   deleteAlbumByIdHandler,
   addSongHandler,
   getAllSongsHandler,
+  getSongByIdHandler,
 };

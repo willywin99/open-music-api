@@ -5,6 +5,7 @@ const {
   deleteAlbumByIdHandler,
   addSongHandler,
   getAllSongsHandler,
+  getSongByIdHandler,
 } = require('./handler');
 
 const routes = [
@@ -37,6 +38,11 @@ const routes = [
     method: 'GET',
     path: '/songs',
     handler: getAllSongsHandler,
+  },
+  {
+    method: 'GET',
+    path: '/songs/{id}',
+    handler: getSongByIdHandler,
   },
 ];
 
