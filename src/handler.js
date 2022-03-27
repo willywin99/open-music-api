@@ -223,6 +223,29 @@ const editSongByIdHandler = (request, h) => {
   return response;
 };
 
+const deleteSongByIdHandler = (request, h) => {
+  const {id} = request.params;
+
+  const index = songs.findIndex((song) => song.id === id);
+
+  if (index !== -1) {
+    songs.splice(index, 1);
+    const response = h.response({
+      status: 'success',
+      message: 'Lagu berhasil dihapus',
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Lagu gagal dihapus. Id tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
 module.exports = {
   addAlbumHandler,
   getAlbumByIdHandler,
@@ -232,4 +255,5 @@ module.exports = {
   getAllSongsHandler,
   getSongByIdHandler,
   editSongByIdHandler,
+  deleteSongByIdHandler,
 };
