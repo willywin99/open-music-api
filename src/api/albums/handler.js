@@ -2,6 +2,11 @@
 class AlbumsHandler {
   constructor(service) {
     this._service = service;
+
+    this.postAlbumHandler = this.postAlbumHandler.bind(this);
+    this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
+    this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
+    this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
   }
 
   postAlbumHandler(request, h) {
@@ -69,7 +74,7 @@ class AlbumsHandler {
     }
   }
 
-  deleteAlbumByIdHandler(request) {
+  deleteAlbumByIdHandler(request, h) {
     try {
       const {id} = request.params;
       this._service.deleteAlbumById(id);
