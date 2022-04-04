@@ -1,3 +1,6 @@
+// mengimpor dotenv dan menjalankan konfigurasinya
+require('dotenv').config();
+
 const Hapi = require('@hapi/hapi');
 // const routes = require('./routes');
 const albums = require('./api/albums');
@@ -12,8 +15,10 @@ const init = async () => {
   const songsService = new SongsService();
 
   const server = Hapi.server({
-    port: 5000,
-    host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
+    // port: 5000,
+    port: process.env.PORT,
+    // host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
+    host: process.env.HOST,
     routes: {
       cors: {
         origin: ['*'],

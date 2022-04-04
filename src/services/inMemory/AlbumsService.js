@@ -8,13 +8,13 @@ class AlbumsService {
     this._albums = [];
   }
 
-  addAlbum({name, year, body}) {
+  addAlbum({name, year}) {
     const id = 'album-' + nanoid(16);
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
     const newAlbum = {
-      name, year, body, id, createdAt, updatedAt,
+      name, year, id, createdAt, updatedAt,
     };
 
     this._albums.push(newAlbum);
@@ -39,7 +39,7 @@ class AlbumsService {
     return album;
   }
 
-  editAlbumById(id, {name, year, body}) {
+  editAlbumById(id, {name, year}) {
     const index = this._albums.findIndex((album) => album.id === id);
 
     if (index === -1) {
@@ -53,7 +53,6 @@ class AlbumsService {
       ...this._albums[index],
       name,
       year,
-      body,
       updatedAt,
     };
   }
