@@ -32,6 +32,7 @@ exports.up = (pgm) => {
       type: 'TEXT',
       references: 'albums',
       onDelete: 'cascade',
+      // notNull: false,
     },
     created_at: {
       type: 'TEXT',

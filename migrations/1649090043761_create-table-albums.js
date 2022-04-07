@@ -21,7 +21,7 @@ exports.up = (pgm) => {
       notNull: true,
     },
     updated_at: {
-      type: 'INTEGER',
+      type: 'TEXT',
       notNull: true,
     },
   });

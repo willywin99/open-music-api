@@ -17,7 +17,7 @@ class SongsHandler {
     try {
       this._validator.validateSongPayload(request.payload);
       const {
-        title = 'untitled',
+        title,
         year,
         genre,
         performer,
@@ -133,6 +133,7 @@ class SongsHandler {
       });
       response.code(500);
       console.error(error);
+      // console.log(error);
       return response;
     }
   }
