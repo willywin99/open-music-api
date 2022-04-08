@@ -53,10 +53,14 @@ class AlbumsHandler {
     try {
       const {id} = request.params;
       const album = await this._service.getAlbumById(id);
+      const songs = await this._service.getDetailedAlbum(id);
       return {
         status: 'success',
         data: {
-          album,
+          album: {
+            ...album,
+            songs: songs,
+          },
         },
       };
     } catch (error) {

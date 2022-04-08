@@ -58,13 +58,35 @@ class SongsHandler {
     }
   }
 
-  async getSongsHandler() {
+  async getSongsHandler(request, h) {
+    const {title, performer} = request.query;
     const songs = await this._service.getSongs();
+
+    let songUnderSearching = songs;
+
+    if (title && performer) {
+      // eslint-disable-next-line max-len
+      songUnderSearching = songs.filter((s) => (s.title.toLowerCase().includes(title.toLowerCase()) && s.performer.toLowerCase().includes(performer.toLowerCase())),
+      );
+    }
+
+    if (title) {
+      // eslint-disable-next-line max-len
+      songUnderSearching = songs.filter((s) => s.title.toLowerCase().includes(title.toLowerCase()),
+      );
+    }
+
+    if (performer) {
+      // eslint-disable-next-line max-len
+      songUnderSearching = songs.filter((s) => s.performer.toLowerCase().includes(performer.toLowerCase()),
+      );
+    }
+
     return {
       status: 'success',
       data: {
         // songs,
-        songs: songs.map((s) => ({
+        songs: songUnderSearching.map((s) => ({
           id: s.id,
           title: s.title,
           performer: s.performer,
