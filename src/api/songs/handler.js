@@ -61,38 +61,57 @@ class SongsHandler {
   async getSongsHandler(request, h) {
     const {title, performer} = request.query;
     const songs = await this._service.getSongs();
+    try {
+      let songUnderSearching = songs;
 
-    let songUnderSearching = songs;
+      if (title && performer) {
+        // eslint-disable-next-line max-len
+        songUnderSearching = songs.filter((s) => (s.title.toLowerCase().includes(title.toLowerCase()) && s.performer.toLowerCase().includes(performer.toLowerCase())),
+        );
+      }
 
-    if (title && performer) {
-      // eslint-disable-next-line max-len
-      songUnderSearching = songs.filter((s) => (s.title.toLowerCase().includes(title.toLowerCase()) && s.performer.toLowerCase().includes(performer.toLowerCase())),
-      );
+      if (title) {
+        // eslint-disable-next-line max-len
+        songUnderSearching = songs.filter((s) => s.title.toLowerCase().includes(title.toLowerCase()),
+        );
+      }
+
+      if (performer) {
+        // eslint-disable-next-line max-len
+        songUnderSearching = songs.filter((s) => s.performer.toLowerCase().includes(performer.toLowerCase()),
+        );
+      }
+
+      return {
+        status: 'success',
+        data: {
+          // songs,
+          songs: songUnderSearching.map((s) => ({
+            id: s.id,
+            title: s.title,
+            performer: s.performer,
+          })),
+        },
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server ERROR!
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
     }
-
-    if (title) {
-      // eslint-disable-next-line max-len
-      songUnderSearching = songs.filter((s) => s.title.toLowerCase().includes(title.toLowerCase()),
-      );
-    }
-
-    if (performer) {
-      // eslint-disable-next-line max-len
-      songUnderSearching = songs.filter((s) => s.performer.toLowerCase().includes(performer.toLowerCase()),
-      );
-    }
-
-    return {
-      status: 'success',
-      data: {
-        // songs,
-        songs: songUnderSearching.map((s) => ({
-          id: s.id,
-          title: s.title,
-          performer: s.performer,
-        })),
-      },
-    };
   }
 
   async getSongByIdHandler(request, h) {
