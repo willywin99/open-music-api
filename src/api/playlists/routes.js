@@ -12,7 +12,7 @@ const routes = (handler) => [
   {
     method: 'DELETE',
     path: '/playlists/{playlistId}',
-    handler: handler.deletePlaylistHandler,
+    handler: handler.deletePlaylistByIdHandler,
   },
   {
     method: 'POST',
