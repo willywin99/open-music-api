@@ -48,6 +48,21 @@ class PlaylistsService {
       throw new NotFoundError('Playlist gagal dihapus. Id tidak ditemukan');
     }
   }
+
+  async addSongToPlaylist(playlistId, songId) {
+    const id = `playlist_songs-${nanoid(16)}`;
+
+    const query = {
+      text: 'INSERT INTO playlist_songs VALUES($1, $2, $3) RETURNING id',
+      values: [id, playlistId, songId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new InvariantError('Lagu gagal ditambahkan ke Playlist');
+    }
+  }
 }
 
 module.exports = PlaylistsService;
