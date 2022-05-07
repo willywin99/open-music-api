@@ -7,8 +7,9 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 class PlaylistsService {
-  constructor() {
+  constructor(collaborationService) {
     this._pool = new Pool();
+    this._collaborationService = collaborationService;
   }
 
   async addPlaylist({name, owner}) {
@@ -28,10 +29,10 @@ class PlaylistsService {
     return result.rows[0].id;
   }
 
-  async getPlaylists(owner) {
+  async getPlaylists(user) {
     const query = {
-      text: 'SELECT playlists.id, playlists.name, users.username, FROM users INNER JOIN playlists ON playlists.owner = users.id WHERE playlists.owner = $1',
-      values: [owner],
+      text: 'SELECT playlists.id, playlists.name, users.username FROM playlists LEFT JOIN users ON users.id = playlists.owner LEFT JOIN collaborations ON playlists.id = collaborations.playlist_id WHERE playlists.owner = $1 OR collaborations.user_id = $1',
+      values: [user],
     };
     const result = await this._pool.query(query);
     return result.rows;
@@ -73,7 +74,7 @@ class PlaylistsService {
 
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
+    if (!result.rows.length) {
       throw new NotFoundError('Playlist tidak ditemukan');
     }
 
@@ -84,15 +85,31 @@ class PlaylistsService {
     }
   }
 
+  async verifyPlaylistAccess(playlistId, userId) {
+    try {
+      await this.verifyPlaylistOwner(playlistId, userId);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+
+      try {
+        await this._collaborationService.verifyCollaborator(playlistId, userId);
+      } catch (error) {
+        throw error;
+      }
+    }
+  }
+
   async addSongToPlaylist(playlistId, songId) {
     const query = {
-      text: 'INSERT INTO playlist_songs VALUES($1, $2) RETURNING id',
+      text: 'INSERT INTO playlist_songs (playlist_id, song_id) VALUES($1, $2) RETURNING id',
       values: [playlistId, songId],
     };
 
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rows[0].id) {
       throw new InvariantError('Lagu gagal ditambahkan ke Playlist');
     }
   }
