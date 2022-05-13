@@ -95,13 +95,28 @@ class PlaylistsService {
 
       try {
         await this._collaborationService.verifyCollaborator(playlistId, userId);
-      } catch (error) {
+      } catch {
         throw error;
       }
     }
   }
 
+  async getSongById(songId) {
+    const query = {
+      text: 'SELECT * FROM songs WHERE id = $1',
+      values: [songId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Lagu tidak ditemukan');
+    }
+  }
+
   async addSongToPlaylist(playlistId, songId) {
+    await this.getSongById(songId);
+
     const query = {
       text: 'INSERT INTO playlist_songs (playlist_id, song_id) VALUES($1, $2) RETURNING id',
       values: [playlistId, songId],

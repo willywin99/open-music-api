@@ -86,11 +86,12 @@ class PlaylistsHandler {
 
   async deletePlaylistByIdHandler(request, h) {
     try {
-      const {id} = request.params;
+      // const {id} = request.params;
+      const {playlistId} = request.params;
       const {id: credentialId} = request.auth.credentials;
 
-      await this._service.verifyPlaylistOwner(id, credentialId);
-      await this._service.deletePlaylistById(id);
+      await this._service.verifyPlaylistOwner(playlistId, credentialId);
+      await this._service.deletePlaylistById(playlistId);
 
       return {
         status: 'success',
@@ -161,12 +162,13 @@ class PlaylistsHandler {
       const {id: credentialId} = request.auth.credentials;
 
       await this._service.verifyPlaylistAccess(playlistId, credentialId);
-      const songs = await this._service.getSongsFromPlaylist(playlistId);
+      const playlist = await this._service.getPlaylistById(playlistId);
+      playlist.songs = await this._service.getSongsFromPlaylist(playlistId);
 
       return {
         status: 'success',
         data: {
-          songs,
+          playlist,
         },
       };
     } catch (error) {
